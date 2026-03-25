@@ -2,6 +2,7 @@ import { create } from "zustand"
 import { useSocketStore } from "./useSocketStore.jsx";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
+import { getErrorMessage } from "../lib/getErrorMessage";
 
 export const useChatStore = create((set, get) => ({
     messages: [],
@@ -11,7 +12,7 @@ export const useChatStore = create((set, get) => ({
             const res = await axiosInstance.get(`/chats/${userId}`);
             set({ messages: res.data });
         } catch (error) {
-            toast.error(error.response.data.message);
+            toast.error(getErrorMessage(error, "Failed to load messages"));
         }
     },
 
@@ -22,7 +23,7 @@ export const useChatStore = create((set, get) => ({
             set({ messages: [...messages, res.data] })
 
         } catch (error) {
-            toast.error(error.response.data.message);
+            toast.error(getErrorMessage(error, "Failed to send message"));
         }
     },
 

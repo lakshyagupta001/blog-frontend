@@ -5,6 +5,7 @@ import { signup } from '../lib/api';
 import { ShipWheelIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useThemeStore } from '../store/useThemeStore';
+import { getErrorMessage } from '../lib/getErrorMessage';
 
 const SignupPage = () => {
   const [signupData, setSignupData] = useState({
@@ -17,10 +18,13 @@ const SignupPage = () => {
 
   const queryClient = useQueryClient();
 
-  const { mutate: signupMutation, isPending, error } = useMutation({
+  const { mutate: signupMutation, isPending } = useMutation({
     mutationFn: signup,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['authUser'] });
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage(error, 'Signup failed'));
     },
   });
 
@@ -47,10 +51,6 @@ const SignupPage = () => {
               Blogify
             </span>
           </div>
-          {/* Error Message */}
-          {error && (
-            toast.error(error.repsonse.data.message)
-          )}
           <div className='w-full'>
             <form onSubmit={handleSignup}>
               <div className='space-y-4'>

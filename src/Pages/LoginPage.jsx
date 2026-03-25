@@ -5,6 +5,7 @@ import { ShipWheelIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useThemeStore } from '../store/useThemeStore';
 import toast from 'react-hot-toast';
+import { getErrorMessage } from '../lib/getErrorMessage';
 
 const LoginPage = () => {
   const [loginData, setLoginData] = useState({
@@ -22,7 +23,7 @@ const LoginPage = () => {
       queryClient.invalidateQueries({ queryKey: ['authUser'] });
     },
     onError: (error) => {
-      toast.error(error.response.data.message);
+      toast.error(getErrorMessage(error, 'Login failed'));
     }
   });
 
